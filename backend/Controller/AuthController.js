@@ -45,12 +45,12 @@ exports.signin = async (req, res) => {
       });
     }
 
-    const accestoken = jwt.sign(
+    const token = jwt.sign(
       { _id: user._id, name: user.name, email: user.email },
       process.env.JWT_SECRET
     );
-    res.cookie("CookieToken", accestoken, { expire: new Date() + 9999 });
-    return res.json({ accestoken });
+    res.cookie("CookieToken", token, { expire: new Date() + 9999 });
+    return res.json({ token });
   } catch (err) {
     return res.status(400).json({
       err: errorHandler(err),
