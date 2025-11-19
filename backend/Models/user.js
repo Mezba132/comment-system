@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const Schema = mongoose.Schema;
 const { v1: uuidv1 } = require("uuid");
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -51,7 +52,7 @@ userSchema.methods = {
         .update(password)
         .digest("hex");
     } catch (err) {
-      return "";
+      return err;
     }
   },
 };

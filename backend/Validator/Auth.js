@@ -6,7 +6,7 @@ exports.userSignupValidator = [
   check("email")
     .notEmpty()
     .withMessage("Email is required")
-    .matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,15})+$/)
+    .matches(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,15})+$/)
     .withMessage("Valid Email is required")
     .isLength({ min: 4, max: 32 })
     .withMessage("Email must be between 3 to 32 characters"),
@@ -38,7 +38,7 @@ exports.userSigninValidator = [
   check("email")
     .notEmpty()
     .withMessage("Email is required")
-    .matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,15})+$/)
+    .matches(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,15})+$/)
     .withMessage("Valid Email is required")
     .isLength({ min: 4, max: 32 })
     .withMessage("Email must be between 3 to 32 characters"),
