@@ -8,7 +8,7 @@ export const fetchComments = createAsyncThunk(
       const res = await commentsApi.list({ page, limit, sort });
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Fetch failed");
+      return rejectWithValue(err.response?.data?.err || "Fetch failed");
     }
   }
 );
@@ -20,7 +20,7 @@ export const createComment = createAsyncThunk(
       const res = await commentsApi.create(payload);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Create failed");
+      return rejectWithValue(err.response?.data?.err || "Create failed");
     }
   }
 );
@@ -29,11 +29,10 @@ export const updateComment = createAsyncThunk(
   "comments/update",
   async ({ id, payload }, { rejectWithValue }) => {
     try {
-      console.log("Thunk updating comment with:", id, payload);
       const res = await commentsApi.update(id, payload);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Update failed");
+      return rejectWithValue(err.response?.data?.err || "Update failed");
     }
   }
 );
@@ -45,7 +44,7 @@ export const deleteComment = createAsyncThunk(
       const res = await commentsApi.remove(id);
       return { id };
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Delete failed");
+      return rejectWithValue(err.response?.data?.err || "Delete failed");
     }
   }
 );
@@ -57,7 +56,7 @@ export const likeComment = createAsyncThunk(
       const res = await commentsApi.like(id);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Like failed");
+      return rejectWithValue(err.response?.data?.err || "Like failed");
     }
   }
 );
@@ -69,7 +68,7 @@ export const dislikeComment = createAsyncThunk(
       const res = await commentsApi.dislike(id);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Dislike failed");
+      return rejectWithValue(err.response?.data?.err || "Dislike failed");
     }
   }
 );
@@ -81,7 +80,7 @@ export const replyToComment = createAsyncThunk(
       const res = await commentsApi.reply(parentId, { text });
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Reply failed");
+      return rejectWithValue(err.response?.data?.err || "Reply failed");
     }
   }
 );

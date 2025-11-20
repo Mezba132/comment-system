@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../features/auth/auth_thunks";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function RegisterForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((s) => s.auth);
+  const { loading } = useSelector((s) => s.auth);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,7 +17,13 @@ export default function RegisterForm() {
     e.preventDefault();
     dispatch(registerUser({ name, email, password }))
       .unwrap()
-      .then(() => navigate("/login"));
+      .then(() => {
+        toast.success("Registration successful! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 1500);
+      })
+      .catch((err) => {
+        toast.error(err || "Registration failed");
+      });
   };
 
   return (
@@ -51,8 +58,6 @@ export default function RegisterForm() {
           {loading ? "Creating..." : "Register"}
         </button>
       </form>
-
-      {error && <div className="error">{error}</div>}
 
       <p>
         Already have an account? <Link to="/login">Login</Link>

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createComment } from "../../features/comments/comments_thunks";
+import {
+  createComment,
+  fetchComments,
+} from "../../features/comments/comments_thunks";
 import { toast } from "react-toastify";
 
-export default function AddComment({ parentId = null }) {
+export default function AddComment() {
   const dispatch = useDispatch();
   const { user } = useSelector((s) => s.auth);
   const [text, setText] = useState("");
@@ -24,9 +27,16 @@ export default function AddComment({ parentId = null }) {
 
     try {
       setIsSubmitting(true);
-      dispatch(createComment({ text: text.trim(), parentId }));
+      dispatch(createComment({ text: text.trim() }))
+        .unwrap()
+        .then(() => {
+          toast.success("Comment posted successfully!");
+          dispatch(fetchComments({ page: 1, limit: 10, sort: "newest" }));
+        })
+        .catch((err) => {
+          toast.error(err || "Comment creation failed");
+        });
       setText("");
-      toast.success("Comment posted successfully!");
     } catch (err) {
       toast.error("Failed to post comment");
     } finally {

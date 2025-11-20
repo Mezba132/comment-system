@@ -8,7 +8,7 @@ export const loginUser = createAsyncThunk(
       const res = await authApi.login(data);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Login failed");
+      return rejectWithValue(err.response?.data?.err || "Login failed");
     }
   }
 );
@@ -20,7 +20,7 @@ export const registerUser = createAsyncThunk(
       const res = await authApi.register(data);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Register failed");
+      return rejectWithValue(err.response?.data?.err || "Register failed");
     }
   }
 );

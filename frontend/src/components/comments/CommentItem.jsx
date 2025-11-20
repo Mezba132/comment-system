@@ -24,7 +24,6 @@ export default function CommentItem({ comment }) {
     dispatch(likeComment(comment._id))
       .unwrap()
       .then(() => {
-        toast.success("You like the comment");
         dispatch(fetchComments({ page: 1, limit: 10, sort: "newest" }));
       });
   };
@@ -34,7 +33,6 @@ export default function CommentItem({ comment }) {
     dispatch(dislikeComment(comment._id))
       .unwrap()
       .then(() => {
-        toast.success("You Dislike the comment");
         dispatch(fetchComments({ page: 1, limit: 10, sort: "newest" }));
       });
   };
@@ -47,7 +45,6 @@ export default function CommentItem({ comment }) {
     dispatch(deleteComment(comment._id))
       .unwrap()
       .then(() => {
-        toast.success("Comment deleted");
         dispatch(fetchComments({ page: 1, limit: 10, sort: "newest" }));
       });
   };
@@ -57,8 +54,8 @@ export default function CommentItem({ comment }) {
     dispatch(updateComment({ id: comment._id, payload: { text: editText } }))
       .unwrap()
       .then(() => {
-        toast.success("Updated successfully");
         setEditOpen(false);
+        dispatch(fetchComments({ page: 1, limit: 10, sort: "newest" }));
       });
   };
 

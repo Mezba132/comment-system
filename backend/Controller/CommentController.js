@@ -3,11 +3,10 @@ const { errorHandler } = require("../Helper/ErrorHandler");
 
 exports.createComment = async (req, res) => {
   try {
-    const { text, parent } = req.body;
+    const { text } = req.body;
     const comment = new Comment({
       author: req.auth._id,
       text,
-      parent: parent || null,
     });
     const saved = await comment.save();
     const populated = await Comment.findById(saved._id).populate(

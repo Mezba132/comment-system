@@ -21,7 +21,6 @@ export default function ReplyBox({ parentId, onClose }) {
     dispatch(replyToComment({ text, parentId }))
       .unwrap()
       .then(() => {
-        toast.success("Reply added");
         dispatch(fetchComments({ page: 1, limit: 10, sort: "newest" }));
       });
     setText("");

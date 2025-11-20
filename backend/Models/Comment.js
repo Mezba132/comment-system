@@ -12,6 +12,7 @@ const ReplySchema = new Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 500,
     },
   },
   { timestamps: true }
@@ -28,6 +29,7 @@ const CommentSchema = new Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 500,
     },
     likes: [
       {
@@ -42,11 +44,6 @@ const CommentSchema = new Schema(
       },
     ],
     replies: [ReplySchema],
-    parent: {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-      default: null,
-    },
   },
   { timestamps: true }
 );
