@@ -55,10 +55,10 @@ npm install
 
 ### 4. Create .env File
 
-PORT=5000
-DB=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-CLIENT_ORIGIN=http://localhost:3000
+- PORT=5000
+- DB=your_mongodb_connection_string
+- JWT_SECRET=your_secret_key
+- CLIENT_ORIGIN=http://localhost:3000
 
 ### 5. Start Backend Server
 
@@ -100,23 +100,23 @@ npm run build
 
 ### Authentication
 
-POST /api/auth/signup - signup
-POST /api/auth/signin - signin
-GET /api/auth/signout - signout
+- POST /api/auth/signup - signup
+- POST /api/auth/signin - signin
+- GET /api/auth/signout - signout
 
 ### Users
 
-GET /api//user/:id - get user by id
+- GET /api//user/:id - get user by id
 
 ### Comments
 
-POST /api/comment - create comment
-GET /api/comments - get all comments
-PUT /api/comment/:id - update comment
-DELETE /api/comment/:id - delete comment
-PUT /api/comment/:id/like - like comment
-PUT /api/comment/:id/dislike - dislike comment
-PUT /api/comment/:id/reply - create reply
+- POST /api/comment - create comment
+- GET /api/comments - get all comments
+- PUT /api/comment/:id - update comment
+- DELETE /api/comment/:id - delete comment
+- PUT /api/comment/:id/like - like comment
+- PUT /api/comment/:id/dislike - dislike comment
+- PUT /api/comment/:id/reply - create reply
 
 ## Script Summary
 
