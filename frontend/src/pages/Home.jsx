@@ -1,8 +1,12 @@
-export default function Home() {
+import AddComment from "../components/comments/AddComment";
+import CommentList from "../components/comments/CommentList";
+
+export default function CommentsPage() {
   return (
-    <div>
-      <h1>Welcome to the Comment System!</h1>
-      <p>This is personalized home page.</p>
+    <div className="container">
+      <h1 className="page-title">Comment System</h1>
+      <AddComment />
+      <CommentList />
     </div>
   );
 }

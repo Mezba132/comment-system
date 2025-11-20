@@ -1,15 +1,6 @@
 const Comment = require("../Models/Comment");
 const { errorHandler } = require("../Helper/ErrorHandler");
 
-function emitEvent(req, eventName, payload) {
-  try {
-    const io = req.app.get("io");
-    if (io) io.emit(eventName, payload);
-  } catch (e) {
-    console.error("Socket emit error:", e.message);
-  }
-}
-
 exports.createComment = async (req, res) => {
   try {
     const { text, parent } = req.body;
@@ -23,7 +14,6 @@ exports.createComment = async (req, res) => {
       "author",
       "_id name email"
     );
-    emitEvent(req, "comment:created", populated);
     return res.json(populated);
   } catch (err) {
     return res.status(400).json({ error: errorHandler(err) });
@@ -67,9 +57,62 @@ exports.getComments = async (req, res) => {
         $unwind: "$author",
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "replies.author",
+          foreignField: "_id",
+          as: "replyAuthors",
+        },
+      },
+
+      {
+        $addFields: {
+          replies: {
+            $map: {
+              input: "$replies",
+              as: "reply",
+              in: {
+                _id: "$$reply._id",
+                text: "$$reply.text",
+                createdAt: "$$reply.createdAt",
+                updatedAt: "$$reply.updatedAt",
+                author: {
+                  $let: {
+                    vars: {
+                      user: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$replyAuthors",
+                              as: "u",
+                              cond: { $eq: ["$$u._id", "$$reply.author"] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: {
+                      _id: "$$user._id",
+                      name: "$$user.name",
+                      email: "$$user.email",
+                      createdAt: "$$user.createdAt",
+                      updatedAt: "$$user.updatedAt",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      {
         $project: {
           "author.hash_password": 0,
           "author.salt": 0,
+          "replyAuthors.hash_password": 0,
+          "replyAuthors.salt": 0,
         },
       },
     ];
@@ -99,7 +142,6 @@ exports.updateComment = async (req, res) => {
       "author",
       "_id name email"
     );
-    emitEvent(req, "comment:updated", populated);
     return res.json(populated);
   } catch (err) {
     return res.status(400).json({ error: errorHandler(err) });
@@ -108,9 +150,10 @@ exports.updateComment = async (req, res) => {
 
 exports.deleteComment = async (req, res) => {
   try {
-    await req.comment.remove();
-    emitEvent(req, "comment:deleted", { _id: req.comment._id });
-    return res.json({ message: "Comment deleted" });
+    const result = await Comment.deleteOne({ _id: req.comment._id });
+    if (result.deletedCount && result.deletedCount > 0) {
+      return res.json({ message: "Comment deleted" });
+    }
   } catch (err) {
     return res.status(400).json({ error: errorHandler(err) });
   }
@@ -140,7 +183,6 @@ exports.likeComment = async (req, res) => {
       "author",
       "_id name email"
     );
-    emitEvent(req, "comment:liked", populated);
     return res.json(populated);
   } catch (err) {
     return res.status(400).json({ error: errorHandler(err) });
@@ -171,7 +213,7 @@ exports.dislikeComment = async (req, res) => {
       "author",
       "_id name email"
     );
-    emitEvent(req, "comment:disliked", populated);
+
     return res.json(populated);
   } catch (err) {
     return res.status(400).json({ error: errorHandler(err) });
@@ -187,7 +229,6 @@ exports.replyToComment = async (req, res) => {
     const populated = await Comment.findById(saved._id)
       .populate("author", "_id name email")
       .populate("replies.author", "_id name email");
-    emitEvent(req, "comment:replied", populated);
     return res.json(populated);
   } catch (err) {
     return res.status(400).json({ error: errorHandler(err) });
